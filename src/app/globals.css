@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  /* Our Luxury Brand Colors */
+  --color-brand-olive: #4a5d4e;
+  --color-brand-charcoal: #0f172a;
+  --color-brand-offwhite: #f8fafc;
+
+  /* Our Mobile Touch Target Sizing */
+  --spacing-touch: 48px;
+}
+
+/* Force the base background and text colors to override any browser dark-mode defaults */
+@layer base {
+  body {
+    background-color: var(--color-brand-offwhite);
+    color: var(--color-brand-charcoal);
+  }
+}
