@@ -6,10 +6,19 @@ import Link from 'next/link';
 
 interface AboutProps {
   title?: string;
+  /** Replaces the first paragraph, so area pages don't repeat the homepage text. */
+  intro?: string;
+  /** Replaces the last paragraph. */
+  closing?: string;
 }
 
+const defaultIntro = "Eddie er en af Hellerups mest erfarne frisører og har drevet sin hyggelige salon på Bernstorffsvej siden 2006. Salonen er beliggende i lyse, indbydende lokaler tæt på både Gentofte og Charlottenlund, hvor behandlingen altid er professionel, personlig og nærværende.";
+const defaultClosing = "Hos Eddie's Cut bydes du velkommen med friskbrygget kaffe, te og chokolade. Jeg gør mit yderste for at skabe den bedst mulige oplevelse og en rar atmosfære for dig, hver gang du sætter dig i stolen.";
+
 export default function About({
-  title = "Frisør i Hellerup med hjerterum og 25 års erfaring"
+  title = "Frisør i Hellerup med hjerterum og 25 års erfaring",
+  intro = defaultIntro,
+  closing = defaultClosing,
 }: AboutProps) {
   return (
     <section id="om-os" className="py-24 bg-white overflow-hidden snap-start scroll-mt-20">
@@ -30,7 +39,7 @@ export default function About({
 
             <div className="space-y-4 text-lg text-brand-charcoal/80 leading-relaxed">
               <p>
-                Eddie er en af Hellerups mest erfarne frisører og har drevet sin hyggelige salon på Bernstorffsvej siden 2006. Salonen er beliggende i lyse, indbydende lokaler tæt på både Gentofte og Charlottenlund, hvor behandlingen altid er professionel, personlig og nærværende.
+                {intro}
               </p>
 
               {/* Editorial Internal Links passing authority to your 4 pillar routes */}
@@ -55,7 +64,7 @@ export default function About({
               </p>
 
               <p>
-                Hos Eddie&apos;s Cut bydes du velkommen med friskbrygget kaffe, te og chokolade. Jeg gør mit yderste for at skabe den bedst mulige oplevelse og en rar atmosfære for dig, hver gang du sætter dig i stolen.
+                {closing}
               </p>
             </div>
           </motion.div>

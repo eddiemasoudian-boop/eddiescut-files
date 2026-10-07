@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -141,6 +142,7 @@ export default function ClientServiceList({ title, services, faqs = [] }: Client
                 >
                   <button
                     onClick={() => toggleFaq(fIdx)}
+                    aria-expanded={isOpen}
                     className="w-full flex items-start sm:items-center justify-between p-4 sm:p-5 text-left font-semibold text-brand-charcoal hover:text-brand-olive transition-colors cursor-pointer outline-none gap-4"
                   >
                     <span className="text-base sm:text-lg leading-snug flex-grow">{faq.question}</span>
@@ -150,21 +152,14 @@ export default function ClientServiceList({ title, services, faqs = [] }: Client
                     />
                   </button>
 
-                  <AnimatePresence>
-                    {isOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: 'easeInOut' }}
-                        className="overflow-hidden"
-                      >
-                        <div className="px-4 pb-5 sm:px-5 sm:pb-6 text-brand-charcoal/80 text-sm sm:text-base leading-relaxed border-t border-brand-charcoal/5 pt-3">
-                          {faq.answer}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  {/* Answer stays in the HTML when collapsed, so search engines can read it */}
+                  <div className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+                    <div className="overflow-hidden">
+                      <div className="px-4 pb-5 sm:px-5 sm:pb-6 text-brand-charcoal/80 text-sm sm:text-base leading-relaxed border-t border-brand-charcoal/5 pt-3">
+                        {faq.answer}
+                      </div>
+                    </div>
+                  </div>
                 </motion.div>
               );
             })}

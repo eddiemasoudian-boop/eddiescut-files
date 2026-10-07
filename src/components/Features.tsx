@@ -34,7 +34,16 @@ const itemVariants: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
 };
 
-export default function Features() {
+interface FeaturesProps {
+  /** Card text for area pages; icons stay the same. Defaults to the homepage cards. */
+  items?: { title: string; body: string }[];
+}
+
+export default function Features({ items }: FeaturesProps) {
+  const cards = items
+    ? items.map((item, i) => ({ ...item, icon: featuresData[i % featuresData.length].icon }))
+    : featuresData;
+
   return (
     <section className="py-24 bg-brand-offwhite overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -45,7 +54,7 @@ export default function Features() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 md:grid-cols-3 gap-12"
         >
-          {featuresData.map((feature, index) => {
+          {cards.map((feature, index) => {
             const Icon = feature.icon;
             return (
               <motion.article 

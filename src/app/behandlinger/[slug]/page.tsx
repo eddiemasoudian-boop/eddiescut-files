@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { servicesData } from '@/lib/servicesData';
+import { SITE_URL } from '@/lib/siteConfig';
+import { JsonLd, SALON_ID, breadcrumbSchema, faqSchema } from '@/lib/schema';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Contact from '@/components/Contact';
@@ -23,10 +25,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!service) return { title: 'Service ikke fundet' };
 
   return {
-    title: service.seoTitle,
+    title: { absolute: service.seoTitle },
     description: service.seoDescription,
     alternates: {
       canonical: `/behandlinger/${service.slug}`,
+    },
+    openGraph: {
+      title: service.seoTitle,
+      description: service.seoDescription,
+      url: `${SITE_URL}/behandlinger/${service.slug}`,
+      images: [{ url: service.image }],
+      locale: 'da_DK',
+      type: 'website',
     },
   };
 }
@@ -39,27 +49,42 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
     notFound();
   }
 
-  const faqSchema = service.faqs && service.faqs.length > 0 ? {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": service.faqs.map((faq) => ({
-      "@type": "Question",
-      "name": faq.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": faq.answer,
-      },
-    })),
-  } : null;
+  const pageUrl = `${SITE_URL}/behandlinger/${service.slug}`;
+
+  // "450 kr" -> fixed price, "fra 450 kr" -> minimum price
+  const offers = service.services.map((item) => {
+    const amount = Number(item.price.replace(/[^0-9]/g, ''));
+    const isFrom = item.price.trim().toLowerCase().startsWith('fra');
+    return {
+      '@type': 'Offer',
+      name: item.name,
+      priceCurrency: 'DKK',
+      ...(isFrom
+        ? { priceSpecification: { '@type': 'PriceSpecification', minPrice: amount, priceCurrency: 'DKK' } }
+        : { price: amount }),
+    };
+  });
+
+  const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: service.title,
+    serviceType: service.title,
+    description: service.seoDescription,
+    url: pageUrl,
+    provider: { '@id': SALON_ID },
+    areaServed: ['Hellerup', 'Gentofte', 'Charlottenlund'].map((name) => ({ '@type': 'City', name })),
+    offers,
+  };
 
   return (
     <>
-      {faqSchema && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-        />
-      )}
+      <JsonLd data={serviceSchema} />
+      <JsonLd data={breadcrumbSchema([
+        { name: 'Forside', path: '/' },
+        { name: service.title, path: `/behandlinger/${service.slug}` },
+      ])} />
+      {service.faqs.length > 0 && <JsonLd data={faqSchema(service.faqs)} />}
 
       <Navbar />
       

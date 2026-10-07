@@ -1,18 +1,14 @@
 'use client';
 
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { business, openingHours } from '@/lib/siteConfig';
 
 export default function Contact() {
   return (
     <section 
       id="kontakt" 
       className="bg-brand-charcoal text-brand-offwhite py-16 snap-start scroll-mt-20"
-      itemScope 
-      itemType="https://schema.org/HairSalon"
     >
-      <meta itemProp="name" content="Eddie's Cut" />
-      <meta itemProp="image" content="https://eddiescut.dk/images/eddie-hero-cut.jpg" />
-      <meta itemProp="priceRange" content="$$" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
@@ -24,43 +20,33 @@ export default function Contact() {
                 <MapPin className="text-brand-olive" size={22} />
                 Adresse
               </h2>
-              <div 
-                className="text-brand-offwhite/90 leading-relaxed"
-                itemProp="address" 
-                itemScope 
-                itemType="https://schema.org/PostalAddress"
-              >
-                <p className="font-semibold text-white">Eddie&apos;s Cut</p>
-                <p itemProp="streetAddress">Bernstorffsvej 67</p>
-                <p>
-                  <span itemProp="postalCode">2900</span>{' '}
-                  <span itemProp="addressLocality">Hellerup</span>
-                </p>
-                <p itemProp="addressCountry" content="DK">Danmark</p>
+              <address className="text-brand-offwhite/90 leading-relaxed not-italic">
+                <p className="font-semibold text-white">{business.alternateName}</p>
+                <p>{business.streetAddress}</p>
+                <p>{business.postalCode} {business.addressLocality}</p>
+                <p>Danmark</p>
                 <p className="text-sm text-brand-offwhite/60 mt-2">
                   Nem adgang og parkering – kun få minutter fra Gentofte og Charlottenlund.
                 </p>
-              </div>
+              </address>
             </div>
 
             <div>
               <h2 className="text-2xl font-bold mb-4">Kontakt</h2>
               <div className="space-y-3 text-brand-offwhite/90">
                 <a 
-                  href="tel:+4527135533" 
-                  itemProp="telephone"
+                  href={`tel:${business.telephone}`}
                   className="flex items-center gap-3 hover:text-white transition-colors min-h-touch"
                 >
                   <Phone className="shrink-0 text-brand-olive" size={20} />
-                  +45 27 13 55 33
+                  {business.telephoneDisplay}
                 </a>
                 <a 
-                  href="mailto:info@eddiescut.dk" 
-                  itemProp="email"
+                  href={`mailto:${business.email}`}
                   className="flex items-center gap-3 hover:text-white transition-colors min-h-touch"
                 >
                   <Mail className="shrink-0 text-brand-olive" size={20} />
-                  info@eddiescut.dk
+                  {business.email}
                 </a>
               </div>
             </div>
@@ -100,27 +86,17 @@ export default function Contact() {
               Åbningstider
             </h2>
             <ul className="space-y-3 text-brand-offwhite/90">
-              <li className="flex justify-between border-b border-brand-offwhite/20 pb-2">
-                <span>Mandag</span><span>14:00 - 17:00</span>
-              </li>
-              <li className="flex justify-between border-b border-brand-offwhite/20 pb-2">
-                <span>Tirsdag</span><span>11:30 - 17:00</span>
-              </li>
-              <li className="flex justify-between border-b border-brand-offwhite/20 pb-2">
-                <span>Onsdag</span><span>10:00 - 17:00</span>
-              </li>
-              <li className="flex justify-between border-b border-brand-offwhite/20 pb-2">
-                <span>Torsdag</span><span>10:00 - 17:00</span>
-              </li>
-              <li className="flex justify-between border-b border-brand-offwhite/20 pb-2">
-                <span>Fredag</span><span>10:00 - 17:00</span>
-              </li>
-              <li className="flex justify-between border-b border-brand-offwhite/20 pb-2">
-                <span>Lørdag</span><span>09:00 - 14:00</span>
-              </li>
-              <li className="flex justify-between text-[#9cae9f] font-semibold pt-1">
-                <span>Søndag</span><span>Lukket</span>
-              </li>
+              {openingHours.map((day) =>
+                day.opens ? (
+                  <li key={day.schema} className="flex justify-between border-b border-brand-offwhite/20 pb-2">
+                    <span>{day.da}</span><span>{day.opens} - {day.closes}</span>
+                  </li>
+                ) : (
+                  <li key={day.schema} className="flex justify-between text-[#9cae9f] font-semibold pt-1">
+                    <span>{day.da}</span><span>Lukket</span>
+                  </li>
+                )
+              )}
             </ul>
           </div>
 

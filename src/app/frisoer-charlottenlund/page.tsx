@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
@@ -8,28 +9,47 @@ import Contact from '@/components/Contact';
 import BookingModal from '@/components/BookingModal';
 import BackToTop from '@/components/BackToTop';
 import Footer from '@/components/Footer';
+import { areaPages } from '@/lib/areaData';
+import { SITE_URL } from '@/lib/siteConfig';
+import { JsonLd, SALON_ID, breadcrumbSchema } from '@/lib/schema';
+
+const page = areaPages.charlottenlund;
 
 export const metadata: Metadata = {
-  title: "Frisør Charlottenlund | Eddie's Cut — Book nu",
-  description: "Leder du efter frisør i Charlottenlund? Besøg Eddie's Cut på Bernstorffsvej 67. Nem parkering, 25 års erfaring. Book tid online!",
+  title: { absolute: page.seoTitle },
+  description: page.seoDescription,
   alternates: {
-    canonical: '/frisoer-charlottenlund',
+    canonical: `/${page.slug}`,
   },
+  openGraph: {
+    title: page.seoTitle,
+    description: page.seoDescription,
+    url: `${SITE_URL}/${page.slug}`,
+    locale: 'da_DK',
+    type: 'website',
+  },
+};
+
+const webPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  url: `${SITE_URL}/${page.slug}`,
+  name: page.seoTitle,
+  description: page.seoDescription,
+  about: { '@id': SALON_ID },
+  spatialCoverage: { '@type': 'City', name: page.area },
 };
 
 export default function CharlottenlundPage() {
   return (
     <>
+      <JsonLd data={webPageSchema} />
+      <JsonLd data={breadcrumbSchema([{ name: 'Forside', path: '/' }, { name: `Frisør ${page.area}`, path: `/${page.slug}` }])} />
       <Navbar />
       <main>
-        <Hero 
-          title="Din lokale frisør tæt på Charlottenlund"
-          subtitle="Få byens bedste behandling i en afslappet atmosfære. Eddie's Cut ligger blot et stenkast fra Charlottenlund på Bernstorffsvej 67."
-        />
-        <About 
-          title="Kvalitetsklipning nær Charlottenlund"
-        />
-        <Features />
+        <Hero title={page.heroTitle} subtitle={page.heroSubtitle} />
+        <About title={page.aboutTitle} intro={page.aboutIntro} closing={page.aboutClosing} />
+        <Features items={page.features} />
         <Prices />
       </main>
       <Contact />

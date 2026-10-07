@@ -37,7 +37,8 @@ function PricesContent() {
   const handleTabChange = (idx: number) => {
     setActiveTab(idx);
     const slug = servicesData[idx].slug;
-    window.history.replaceState(null, '', `/?tab=${slug}#priser`);
+    // Keep the current page's path, so area pages don't get rewritten to the homepage URL
+    window.history.replaceState(null, '', `${window.location.pathname}?tab=${slug}#priser`);
   };
 
   return (
@@ -196,8 +197,7 @@ function PricesContent() {
   );
 }
 
-export default function Prices() {
-  return (
+export default function Prices() {return (
     <Suspense fallback={<div className="py-24 text-center">Indlæser priser...</div>}>
       <PricesContent />
     </Suspense>

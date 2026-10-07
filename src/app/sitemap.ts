@@ -1,9 +1,10 @@
 import { MetadataRoute } from 'next';
 import { servicesData } from '@/lib/servicesData';
+import { SITE_URL } from '@/lib/siteConfig';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Hardcoded to the canonical www primary domain to avoid 3XX redirects
-  const baseUrl = 'https://www.eddiescut.dk';
+  // Same domain as the canonicals, so sitemap URLs never hit a redirect
+  const baseUrl = SITE_URL;
 
   // 1. Static Core Landing Pages (Main hub + Area Landing Pages)
   const staticRoutes: MetadataRoute.Sitemap = [
